@@ -12,7 +12,9 @@ variable "security_groups" {
     description = "security group in which it needs to be deployed"
 }
 variable "subnets" {
-    description = "subnet to create the SG"
+  description = "A list of subnets to associate with the load balancer. e.g. ['subnet-1a2b3c4d','subnet-1a2b3c4e','subnet-1a2b3c4f']"
+  type        = list(string)
+  default     = null
 }
 variable "port" {
     description = "target port"
