@@ -13,7 +13,7 @@ resource "aws_lb" "main" {
 }
 
 resource "aws_lb_listener" "http_redirect" {
-  load_balancer_arn = aws_alb.main.id
+  load_balancer_arn = aws_lb.main.id
   port              = 80
   protocol          = "HTTP"
 
