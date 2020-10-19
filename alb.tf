@@ -1,4 +1,4 @@
-resource "aws_lb" "test" {
+resource "aws_lb" "main" {
   name               = "lb-curai-${var.env}-${var.application}"
   internal           = var.internal
   load_balancer_type = "application"
@@ -9,6 +9,22 @@ resource "aws_lb" "test" {
 
   tags = {
     Name = "lb-curai-${var.env}-${var.application}"
+  }
+}
+
+resource "aws_lb_listener" "http_redirect" {
+  load_balancer_arn = aws_alb.main.id
+  port              = 80
+  protocol          = "HTTP"
+
+  default_action {
+    type = "redirect"
+
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
   }
 }
 
