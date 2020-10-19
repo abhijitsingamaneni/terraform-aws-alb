@@ -29,11 +29,11 @@ resource "aws_lb_listener" "http_redirect" {
 }
 
 /*resource "aws_alb_listener" "frontend" {
-  load_balancer_arn = aws_alb.main.id
+  load_balancer_arn = aws_lb.main.id
   port              = 443
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-2016-08"
-  certificate_arn   = aws_acm_certificate.firstopinion_certificate.arn
+  certificate_arn   = var.certificate_arn
 
   default_action {
     type = "fixed-response"
@@ -44,14 +44,16 @@ resource "aws_lb_listener" "http_redirect" {
     }
   }
 }
-*/
 
-resource "aws_lb_target_group" "test" {
-  name        = "lb-tg-curai-${var.env}-${var.application}"
-  port        = var.port
-  protocol    = var.protocol
-  target_type = "ip"
+# Service-specific ALB target group, with stickiness and health check
+resource "aws_alb_target_group" "target_group" {
+  for_each = var.services
+
+  name        = "tg-curai-${var.env}-${var.application}"
+  port        = each.value.container_port
+  protocol    = "HTTP"
   vpc_id      = var.vpc_id
+  target_type = "ip"
   stickiness {
     type            = "lb_cookie"
     cookie_duration = 86400
@@ -64,7 +66,26 @@ resource "aws_lb_target_group" "test" {
     protocol            = "HTTP"
     matcher             = "200"
     timeout             = "3"
-    path                = "/index.html"
+    path                = each.value.health_check_path
     unhealthy_threshold = "2"
   }
 }
+
+# Service-specific routing rule, based on hostname checks
+resource "aws_alb_listener_rule" "routing_rule" {
+  for_each = var.services
+
+  listener_arn = aws_alb_listener.frontend.arn
+  priority     = 100
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_alb_target_group.target_group[each.key].arn
+  }
+
+  condition {
+    host_header {
+      values = [each.value.host]
+    }
+  }
+}*/

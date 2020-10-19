@@ -28,3 +28,28 @@ variable "vpc_id" {
 variable "certificate_arn" {
     description = "arn for the certificat that needs to be used"
 }
+variable "services" {
+  description = "Services to deploy in this stack"
+  type = map(object({
+    container_image = string
+    container_port = number
+    min_replicas = number
+    max_replicas = number
+    health_check_path = string
+    fargate_cpu = string
+    fargate_memory = string
+    host = string
+  }))
+
+  default = {
+    demo = {
+      container_image = "nginxdemos/hello:latest"
+      container_port = 80
+      min_replicas = 2
+      max_replicas = 4
+      health_check_path = "/"
+      fargate_cpu = "256"
+      fargate_memory = "512"
+      host = "chat.firstopinion.com"
+    }
+  }
