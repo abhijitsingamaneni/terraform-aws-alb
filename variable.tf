@@ -16,12 +16,6 @@ variable "subnets" {
   type        = list(string)
   default     = null
 }
-variable "port" {
-    description = "target port"
-}
-variable "protocol" {
-    description = "protocol that need to be used"
-}
 variable "vpc_id" {
     description = "vpc id under which we need to deploy the target group"
 }
