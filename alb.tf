@@ -12,7 +12,7 @@ resource "aws_lb" "test" {
   }
 }
 
-resource "aws_lb_listener" "front_end" {
+/*resource "aws_lb_listener" "front_end" {
   load_balancer_arn = aws_lb.test.arn
   port              = "443"
   protocol          = "HTTPS"
@@ -23,7 +23,7 @@ resource "aws_lb_listener" "front_end" {
     type             = "forward"
     target_group_arn = aws_lb_target_group.test.arn
   }
-}
+}*/
 
 resource "aws_lb_target_group" "test" {
   name        = "lb-tg-curai-${var.env}-${var.application}"
