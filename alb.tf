@@ -1,5 +1,5 @@
 resource "aws_lb" "main" {
-  name               = "lb-curai-${var.env}-${var.application}"
+  name               = "lb-curai-${var.env}"
   internal           = var.internal
   load_balancer_type = "application"
   security_groups    = [var.security_groups]
@@ -8,7 +8,7 @@ resource "aws_lb" "main" {
   enable_deletion_protection = true
 
   tags = {
-    Name = "lb-curai-${var.env}-${var.application}"
+    Name = "alb-curai-${var.env}"
   }
 }
 
