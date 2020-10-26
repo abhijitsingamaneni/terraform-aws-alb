@@ -18,7 +18,7 @@ resource "aws_lb_listener" "http_redirect" {
   protocol          = "HTTP"
 
   default_action {
-    type  = "redirect"
+    type  = "forward"
     target_group_arn = "arn:aws:elasticloadbalancing:us-west-2:501611955209:targetgroup/test/7978436f7f8d3f6d"
   }
 }
